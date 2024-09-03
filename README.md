@@ -2,6 +2,8 @@
 
 1 - Installation de Debian 11 sur VMware Workstation 17
 
+1.1 - Installation de l'image iso
+
 Prérequis : Iso Debian 11 (https://www.debian.org/distrib/netinst)
             
 VMware Workstation 17
@@ -38,6 +40,10 @@ sur le 2e carte réseau on va le mettre a un LAN, cocher "LAN segmnet" puis ajou
 
 ![image](https://github.com/user-attachments/assets/d616d3aa-a3d7-4e3e-b370-4ade5a4b7d1c)
 
+1.2 - Installer Debian 11
 
+maintenant que c'est on peut maintenant demarrée la machine pour installé debian cliquer sur le bouton démarré
 
 ![image](https://github.com/user-attachments/assets/40f8e8eb-0b80-40d7-a3db-c431fc58bbb3)
+
+
