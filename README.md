@@ -76,3 +76,13 @@ Pour configurer l'addresse ip et la passerelle par default il faut tappez
 
             nano /etc/network/interfaces
 
+a l'interrieur on configure le 2e carte réseau en ajoutant a la fin du fichier
+
+            allow-hitplug ens34
+            iface ens34 inet static
+                        address 10.100.255.1/24
+
+enregistrer puis reboot apres faite la commmande suivante pour verifier les interface réseaux
+
+            ip a 
+
