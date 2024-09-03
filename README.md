@@ -66,3 +66,13 @@ décocher "environnement de bureau debian" et "GNOME"
 
 et enfin il faut mettre oui pour mettre grub au démarrage
 
+2 - Configuration réseau
+
+pour passer en mode administrateur au demarrage le nom d'utlisateur vous mettez root et le mdp inscirt lors de l'installation ou on tape la commande
+
+            su -
+
+Pour configurer l'addresse ip et la passerelle par default il faut tappez
+
+            nano /etc/network/interfaces
+
