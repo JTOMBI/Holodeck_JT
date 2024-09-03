@@ -28,6 +28,8 @@ Choisissez le nombre de Go qu'aura votre VM
 
 vous avez la liste de ce que contient votre VM et cliquez sur "Custom Hardawe"
 
+![image](https://github.com/user-attachments/assets/a797ccbf-157c-4e63-a2b1-4795a1de3524)
+
 Sur l'Hardawe cliquez sur "add" en bas a guauche puis ajouter un dexieme carte réseau en cliquant sur "Network adaptateur"
 
 ![image](https://github.com/user-attachments/assets/e7fba58e-76f4-4f8d-aac2-25bfe4273e82)
@@ -37,7 +39,5 @@ sur le 2e carte réseau on va le mettre a un LAN, cocher "LAN segmnet" puis ajou
 ![image](https://github.com/user-attachments/assets/d616d3aa-a3d7-4e3e-b370-4ade5a4b7d1c)
 
 
-
-![image](https://github.com/user-attachments/assets/a797ccbf-157c-4e63-a2b1-4795a1de3524)
 
 ![image](https://github.com/user-attachments/assets/40f8e8eb-0b80-40d7-a3db-c431fc58bbb3)
