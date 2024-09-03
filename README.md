@@ -60,4 +60,9 @@ Dans "Configurer l'outil de gestion des paquets" choisissez par default deb.debi
 
 ![image](https://github.com/user-attachments/assets/04eb9442-e974-4cf7-b013-0e1e0258a1c8)
 
+décocher "environnement de bureau debian" et "GNOME"
+
+![image](https://github.com/user-attachments/assets/c37d6844-fe61-4d64-97b7-1fe8fa4e72b2)
+
+et enfin il faut mettre oui pour mettre grub au démarrage
 
