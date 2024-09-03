@@ -22,3 +22,4 @@ Puis, laisser cocher "typical"
 
 ![image](https://github.com/user-attachments/assets/a797ccbf-157c-4e63-a2b1-4795a1de3524)
 
+![image](https://github.com/user-attachments/assets/40f8e8eb-0b80-40d7-a3db-c431fc58bbb3)
