@@ -3,7 +3,7 @@
 1 - Installation de Debian 11 sur VMware Workstation 17
 
 Prérequis : Iso Debian 11 https://www.debian.org/distrib/netinst
-            VMware Workstation 17
+VMware Workstation 17
 
 Lancer VMware au demarrage cliquez "create a new virtuel machine"
 
