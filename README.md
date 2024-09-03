@@ -46,4 +46,18 @@ maintenant que c'est on peut maintenant demarrée la machine pour installé debi
 
 ![image](https://github.com/user-attachments/assets/40f8e8eb-0b80-40d7-a3db-c431fc58bbb3)
 
+cliquez sur install pour pouvoir installer debian sans interface graphique
+
+![image](https://github.com/user-attachments/assets/b0aa7444-9a2f-4744-962d-3fac4977930c)
+
+configuré jusqu'a avoir la configuration réseau car comme on a 2 carte réseau il va nous demander de choisir l'interface principal pour l'installation, choisissez la carte WAN
+
+![image](https://github.com/user-attachments/assets/287349c3-ff39-46f3-9d7d-b7c581665f2b)
+
+Continuer les configuration comme le nom d'utilisateur, mot de passe, disque, ect
+
+Dans "Configurer l'outil de gestion des paquets" choisissez par default deb.debian.org
+
+![image](https://github.com/user-attachments/assets/04eb9442-e974-4cf7-b013-0e1e0258a1c8)
+
 
