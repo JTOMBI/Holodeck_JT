@@ -111,3 +111,9 @@ décommenter la ligne "authoritative"
             #option routers ;
             range 10.100.255.10 10.100.255.10;
             }
+
+redémarrer et verifier si le service dhcp fonctionne bien
+
+            service isc-dhcp-server restart
+            sudo systemctl status isc-dhcp-server
+
