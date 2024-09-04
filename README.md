@@ -86,3 +86,28 @@ enregistrer puis reboot apres faite la commmande suivante pour verifier les inte
 
             ip a 
 
+3 - Mise en place du serveur DHCP
+
+tout d'abord il faut installer le dhcp en tappant
+
+            apt install isc-dhcp-server -y
+
+Ensuite, nous devons préciser sur quel interface du serveur, le “démon” (le “service”) va écouter et donc attendre les requêtes des clients, nous on va utiliser ens34 puisse que c'est l'interface LAN. Modifiez le fichier nécessaire avec la commande suivante
+
+            nano /etc/default/isc-dhcp-server
+
+![image](https://github.com/user-attachments/assets/980b5293-30bb-41b6-9740-83f3e2774883)
+
+Ensuite, il faut éditer le fichier dhcpd.conf pour configurer le service DHCP
+
+            nano /etc/dhcp/dhcpd.conf
+
+décommenter la ligne "authoritative"
+
+![image](https://github.com/user-attachments/assets/f5e4db6e-afb9-4e5e-91ab-1c6885cded91)
+
+            # Etendue LAN
+            subnet 10.100.255.0 netmask 255.255.255.0 {
+            #option routers ;
+            range 10.100.255.10 10.100.255.10;
+            }
