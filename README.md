@@ -117,3 +117,47 @@ redémarrer et verifier si le service dhcp fonctionne bien
             service isc-dhcp-server restart
             sudo systemctl status isc-dhcp-server
 
+4- mise en place du serveur DNS
+
+tout d'abort il faut configurer certain fichier avant d'installer le DNS, pour commencer tappez les commandes suivantes
+
+            nano /etc/hosts
+écrivez la ligne suivante
+
+![image](https://github.com/user-attachments/assets/9b077695-6c54-40ce-b8f8-8387a0fd0a73)
+
+            nano /etc/hostname
+
+mettez le nom de la machine "holodesk"
+
+            nano /etc/resolv.conf
+
+![image](https://github.com/user-attachments/assets/de7b2473-eca2-4ac2-b8ab-fca09eb29e7b)
+
+apres avoir configurer les fichier précedent il faut installer le packet Bind9 pour le DNS
+
+            apt-get install bind9 -y
+
+une fois installé configurer le fichier suivant
+
+            nano /etc/bind/named.conf.local
+
+![image](https://github.com/user-attachments/assets/01aee809-67aa-4cc7-bd07-c70cb1bc0679)
+
+ensuite créé le fichier de définition de notre zone DNS. Nous allons nous baser sur la conf par défaut db.localhost qui contient la configuration minimal pour une zone dns
+
+            cp db.local db.atomit.local && sed -i -e 's/localhost/atomit.local/g' -e 's/127.0.0.1/192.168.56.100/g' db.atomit.local
+
+ensuite vérifier le fichier
+
+            nano /etc/bind/db.starfleet.lan
+
+![image](https://github.com/user-attachments/assets/05d02b2a-ad5c-40cd-89bd-7064c8a1643e)
+
+pour tester on tape la commande 
+
+            nslookup atomit.local
+
+il devrait afficher ceci
+
+![image](https://github.com/user-attachments/assets/4f830bf7-0e69-435f-94c1-66800cc885eb)
