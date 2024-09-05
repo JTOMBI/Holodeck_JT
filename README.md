@@ -118,6 +118,7 @@ redémarrer et verifier si le service dhcp fonctionne bien
             sudo systemctl status isc-dhcp-server
 
 4- mise en place du serveur DNS
+4.1 - installation et configuration du DNS
 
 tout d'abort il faut configurer certain fichier avant d'installer le DNS, pour commencer tappez les commandes suivantes
 
@@ -161,3 +162,45 @@ pour tester on tape la commande
 il devrait afficher ceci
 
 ![image](https://github.com/user-attachments/assets/4f830bf7-0e69-435f-94c1-66800cc885eb)
+
+4.2 - probleme resolv.conf
+
+après avoir modifier le fichier resolv .conf le fichier écrase et reécrit a chaque démarrage a cause du dhcp du WAN pour éviter ce probleme on va désactiver le DHCP et mettre le réseau WAN en static pour ce faire il faut aller dans VMware edit et "Virtual network éditor"
+
+![image](https://github.com/user-attachments/assets/d75f132d-7060-4810-9d51-739f7b914de3)
+
+une fois dans la page vitual network soyez en mode administrateur pour modifier le network
+
+![image](https://github.com/user-attachments/assets/85458c73-a17d-475c-b5cd-2dc93b3df382)
+
+cliquez sur le NAT
+
+![image](https://github.com/user-attachments/assets/aee65707-1995-4267-842b-584b6b9f20e6)
+
+et désactiver le DHCP
+
+![image](https://github.com/user-attachments/assets/d37bfaf2-8708-4c79-8b9f-5234c1449348)
+
+puis dans Debian 11 retourné dans vos interface en écrivant 
+
+            nano /etc/network/interfaces
+
+puis mettre un # sur la ligne qui contient du DHCP sur l'interface ens33 pouis on va le mettre en static
+
+            allow-hitplug ens33
+            #iface ens33 inet dhcp
+            iface ens33 inet static
+                        address 192.168.75.25/24
+                        gateway 192.168.75.2
+
+redémaré et modifié le fichier resolv.conf en rajoutant le serveur dns local
+
+            nano /etc/resolv.conf
+            
+![image](https://github.com/user-attachments/assets/41a21662-aa3f-47ae-9225-248dadda6ae0)
+
+enfin testé dabort avec le réseau internet en mettant a jour debian avec apt-get update et après un nslookup pour le dns local et pour etre sur redémaré pour voir si le fichier resolv.conf change
+
+4.3 modification du serveur DHCP local
+
+
