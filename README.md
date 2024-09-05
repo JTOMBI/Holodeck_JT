@@ -199,8 +199,20 @@ redémaré et modifié le fichier resolv.conf en rajoutant le serveur dns local
             
 ![image](https://github.com/user-attachments/assets/41a21662-aa3f-47ae-9225-248dadda6ae0)
 
+
 enfin testé dabort avec le réseau internet en mettant a jour debian avec apt-get update et après un nslookup pour le dns local et pour etre sur redémaré pour voir si le fichier resolv.conf change
 
 4.3 modification du serveur DHCP local
 
+Nous allons rajouté l'ip du serveur DNS afin que les client puisse ce connecté au serveur DNS local
+
+allez dans le fichier
+
+            nano /etc/dhcp/dhcpd.conf
+
+on rajoute la ligne qui permet de donner au client l'ip
+
+            option domain-name-servers 10.100.255.1;
+
+![image](https://github.com/user-attachments/assets/d6c627e6-5fc6-4856-9d5b-d6283ee730de)
 
