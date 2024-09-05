@@ -216,3 +216,5 @@ on rajoute la ligne qui permet de donner au client l'ip
 
 ![image](https://github.com/user-attachments/assets/d6c627e6-5fc6-4856-9d5b-d6283ee730de)
 
+5 - Mise en place du Service Web avec Nginx
+
