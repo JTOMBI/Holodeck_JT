@@ -147,7 +147,7 @@ une fois installé configurer le fichier suivant
 
 ensuite créé le fichier de définition de notre zone DNS. Nous allons nous baser sur la conf par défaut db.localhost qui contient la configuration minimal pour une zone dns
 
-            cp db.local db.atomit.local && sed -i -e 's/localhost/atomit.local/g' -e 's/127.0.0.1/192.168.56.100/g' db.atomit.local
+            cp db.local db.starfleet.lan && sed -i -e 's/localhost/starfleet.lan/g' -e 's/127.0.0.1/10.100.255.1/g' starfleet.lan
 
 ensuite vérifier le fichier
 
@@ -216,5 +216,70 @@ on rajoute la ligne qui permet de donner au client l'ip
 
 ![image](https://github.com/user-attachments/assets/d6c627e6-5fc6-4856-9d5b-d6283ee730de)
 
-5 - Mise en place du Service Web avec Nginx
+5 - Mise en place de Mariadb
 
+installer mariadb
+
+            sudo apt-get install mariadb-server -y
+
+Démarrez le service MariaDB
+
+            systemctl start mariadb
+
+Activez le service MariaDB pour démarrer au redémarrage du système
+
+            systemctl enable mariadb
+
+MariaDB fournit un script de sécurité pour sécuriser la base de données. Exécutez-le et répondez à toutes les questions de sécurité comme indiqué
+
+            mysql_secure_installation
+
+Au départ, il n'y a pas de mot de passe pour root. Appuyez sur Enter
+
+Appuyez Y pour passer à l’authentification
+
+Appuyez Y pour modifier le mot de passe root
+
+puis appuyer sur Y jusqu'a la fin 
+
+Connectez-vous au shell MariaDB et entrez votre mot de passe root MariaDB
+
+            mysql -u root -p
+
+Vérifiez la version de MariaDB pour vérifier l'installation
+
+Cela devrait renvoyer quelque chose comme ceci :
+
+            MariaDB [(none)]> SELECT @@version
+
+             +---------------------------+
+             | @@version                 |
+             +---------------------------+
+             | 10.5.12-MariaDB-0+deb11u1 |
+             +---------------------------+
+             1 row in set (0.000 sec)
+
+Quitter le shell MariaDB
+
+            MariaDB [(none)]> exit
+
+6 - mettre en place le service web avec Nginx
+
+installez Nginx
+
+            sudo apt install nginx
+
+avant de configuré Nginx on va allez dans le DNS pour ajouté les nom des 2 site qu'on va ajouté, allez dans le fichier de configuration
+
+            nano /etc/bind/db.starfleet.lan
+
+rajouté les deux site (nom des sites www7 et www8)
+
+![image](https://github.com/user-attachments/assets/18c8ef15-e867-4a6f-9b01-9cbe1bb8cea1)
+
+on peut testé avec les nom des site sur un navigateur web
+
+Maintenant nous  pouvons commencer la configuration qui se fera en quatre étapes. D’abord la création des répertoires qui va contenir les pages de nos sites ensuite la création des pages et la configuration des block  server pour chaque site au niveau de nginx et enfin faire les tests
+
+            mdkir -p /var/www/starfleet.lan/www7
+            mdkir -p /var/www/starfleet.lan/www8
