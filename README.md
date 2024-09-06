@@ -283,3 +283,50 @@ Maintenant nous  pouvons commencer la configuration qui se fera en quatre étape
 
             mdkir -p /var/www/starfleet.lan/www7
             mdkir -p /var/www/starfleet.lan/www8
+
+nous allons copier le fichier de configuration par défault dans un fichier que nous allons créer pour chacun des site 
+
+            cp /etc/nginx/sites-available/default /etc/nginx/sites-available/www7
+            cp /etc/nginx/sites-available/default /etc/nginx/sites-available/www8
+
+ensuite on modifie le fichier qu'on vient de copier
+
+            nano /etc/nginx/site-available/www7
+tout d'abord il faut retirer le "default_server" (et commenté l'ip v6 si vous ne l'utilisé pas) du port 80
+
+![image](https://github.com/user-attachments/assets/f24c719d-5863-461f-b504-dba397698ccd)
+
+puis en bas sur root mettez le chemin qu'on a créer au debut pour contenir le site
+
+![image](https://github.com/user-attachments/assets/219a6988-d5a8-4169-b546-57b7a7d3f310)
+
+enfin dans le "server_name" mettez le nom de domaine du premier site
+
+![image](https://github.com/user-attachments/assets/235adb88-0a49-4b89-aefe-0f492d7434fd)
+
+vous avez fini de configurer le premier (www7) site il faut le faire pour le second (www8)
+
+ensuite on va faire un lien des configuation qui va de /etc/nginx/site-available à /etc/nginx/site-enable pour les 2 fichier de configuration d'abord il faut ce placer dans le fichier site-enable
+
+            cd /etc/nginx/sites-enable
+
+après créer les lien
+
+            ln -s /etc/nginx/sites-available/www7 www7
+            ln -s /etc/nginx/sites-available/www8 www8
+            
+on va supprimé les fichier par défaut de site-enable et site-available sinon il va y avoir une erreur
+
+            rm /etc/nginx/sites-available/default
+            rm /etc/nginx/sites-enable/default
+
+enfin pour vérifier si il n'y pas d'érreur tappez la commande 
+
+            nginx -t
+
+si tout est bon reload nginx
+
+            systemctl reload nginx
+
+tester maintenant dans un navigateur web si les 2 site fonctionne
+
