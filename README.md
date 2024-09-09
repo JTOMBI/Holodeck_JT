@@ -330,3 +330,103 @@ si tout est bon reload nginx
 
 tester maintenant dans un navigateur web si les 2 site fonctionne
 
+7. Mise en place du service SFTP
+
+Installez le paquet openssh-server
+
+            apt install openssh-server
+
+L'utilisateur Nginx sous Debian 11 étant par défaut www-data , vous avez attribué celui-ci et son groupe associé aux dossiers et fichiers de starfleet lors de l'installation du CMS.
+
+Les scripts PHP de Dotclear ont ainsi hérité des droits d'accès en écriture leur permettant de mettre à jour localement le contenu de /var/www/starfleet.lan/.
+
+Rappel des permissions utilisées par starfleet :
+- Dossiers = 755
+soit propriétaire u drwx, groupe g r-x, autres o r-x
+
+- Fichiers = 644
+soit propriétaire u rw-, groupe g r--, autres o r--
+
+Les écritures effectuées depuis un client SFTP ne doivent pas modifier cette configuration au risque de voir starfleet ne plus pouvoir se mettre à jour.
+
+Une technique pour éviter cela consiste à créer un dossier miroir du dossier Web de starfleet
+
+Création du dossier miroir
+
+            cd /home
+            mkdir -p admin/sites-web/starfleet
+
+Créez ensuite son groupe sftp-groupe
+
+            addgroup sftp-groupe 
+
+et son utilisateur admin que vous lierez à sftp-groupe
+
+            useradd -d /home/admin/sites-web/starfleet -g sftp-groupe admin
+
+Enfin, appliquez ces permissions sur le dossier miroir
+
+            chown admin:sftp-groupe /home/admin/sites-web/starfleet
+            chmod 755 /home/admin/sites-web/starfleet
+
+et terminez en créant un MDP pour l'utilisateur admin
+
+            passwd admin
+
+ Utilisation de bindfs pour remplir le miroir
+
+             apt install bindfs
+
+Pour remplir automatiquement le miroir, éditez fstab
+
+            nano /etc/fstab
+
+et ajoutez les 2 lignes suivantes à la fin du fichier
+
+            # Montage automatique du dossier miroir de Dotclear 
+
+            bindfs#/var/www/starfleet.lan /home/admin/sites-web/starfleet fuse force-user=admin,force-group=sftp-groupe,create-for-user=www-data,create-for-group=www-data,create-with-perms=ud=rwx:god=rx:uf=rw:gof=r,chgrp-ignore,chown-ignore,chmod-ignore 0 0
+
+Redémarrez afin de traiter la Cde bindfs du fichier fstab
+
+            reboot   
+
+et vérifiez ensuite le contenu du dossier miroir
+
+            ls -l /home/admin/sites-web/starfleet 
+            ls -l /var/www/starfleet.lan
+
+Editez le fichier de configuration du démon SSH
+
+            nano /etc/ssh/sshd_config
+
+Commentez les 2 lignes suivantes
+
+            X11Forwarding yes
+            Subsystem          sftp          /usr/lib/openssh/sftp-server
+
+et ajoutez en fin de fichier ce groupe de lignes
+
+            # Configuration sshd de l'hôte srvdmz
+            Subsystem     sftp     internal-sftp
+            Port 384                                                                   
+            PermitRootLogin no                                         
+            Match User admin
+            ChrootDirectory  /home/admin/sites-web
+            X11Forwarding no
+            AllowTcpForwarding no
+            ForceCommand internal-sftp -u 022
+
+Vérifiez afin que le ChrootDirectory (limite dossier racine) fonctionne que le propriétaire des dossiers admin et sites-web soit bien l'utilisateur root
+
+            ls -l /home
+            ls -l /home/admin
+
+Redémarrez le serveur SSH
+
+            systemctl restart ssh
+            systemctl status ssh 
+
+Testez ensuite une connexion locale 
+
+            sftp -o Port=384 admin@starfleet.lan
