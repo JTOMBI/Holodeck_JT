@@ -430,3 +430,6 @@ Redémarrez le serveur SSH
 Testez ensuite une connexion locale 
 
             sftp -o Port=384 admin@starfleet.lan
+8 - SSL
+
+![image](https://github.com/user-attachments/assets/cbebd356-bf73-4543-9fc9-bc3731186af2)
