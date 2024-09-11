@@ -433,3 +433,7 @@ Testez ensuite une connexion locale
 8 - SSL
 
 ![image](https://github.com/user-attachments/assets/cbebd356-bf73-4543-9fc9-bc3731186af2)
+
+9 - LDAP et LAM
+
+![image](https://github.com/user-attachments/assets/b4bc6583-1417-46f0-bff7-5b89258fd40b)
