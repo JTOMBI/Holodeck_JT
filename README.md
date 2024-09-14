@@ -436,6 +436,7 @@ Testez ensuite une connexion locale
 
 9 - FTPS
 
+![image](https://github.com/user-attachments/assets/8d94a477-7b57-4224-bb35-edb7faf488ac)
 
 
 9 - LDAP et LAM
