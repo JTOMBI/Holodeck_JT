@@ -525,6 +525,10 @@ puis redemarrer nginx
 
 tester sur un navigateur web si www7 nous montre php7.4 et si www8 nous montre php8.3
 
+11 - Mise en place OPENLDAP et LAM (LDAP Account Manager)
+
+
+
 9 - FTPS
 
 ![image](https://github.com/user-attachments/assets/8d94a477-7b57-4224-bb35-edb7faf488ac)
