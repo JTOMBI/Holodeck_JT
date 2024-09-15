@@ -527,7 +527,111 @@ tester sur un navigateur web si www7 nous montre php7.4 et si www8 nous montre p
 
 11 - Mise en place OPENLDAP et LAM (LDAP Account Manager)
 
+Exécutez la commande suivante pour installer le serveur OpenLDAP et les utilitaires de ligne de commande client à partir du référentiel de packages Debian 11
 
+            apt install slapd ldap-utils
+
+Il vous sera demandé de définir un mot de passe pour l'entrée administrateur dans l'annuaire LDAP.
+
+![image](https://github.com/user-attachments/assets/d5054e95-d8af-4764-bd1b-ead6b928f701)
+
+Le processus d'installation installe le package sans aucune configuration. Pour que notre serveur OpenLDAP fonctionne correctement, nous devons effectuer une configuration post-installation de base. Exécutez la commande suivante pour démarrer l'assistant de configuration
+
+            dpkg-reconfigure slapd
+
+Omettre la configuration du serveur LDAP : NON
+
+![image](https://github.com/user-attachments/assets/a2cd0a28-c242-4b50-8128-3da63d701a17)
+
+Nom de domaine DNS : saisissez votre nom de domaine
+
+![image](https://github.com/user-attachments/assets/577dcb67-36b3-4e95-b54b-1f9e5026b02d)
+
+Nom de l'organisation : saisissez le nom de votre organisation comme LinuxBabe
+
+![image](https://github.com/user-attachments/assets/400befb0-e8eb-49bd-a642-602e929d5334)
+
+Mot de passe administrateur : Entrez le même mot de passe défini lors de l'installation
+
+![image](https://github.com/user-attachments/assets/2cb1073a-5e18-4cce-83e5-6591abdcfa68)
+
+Voulez-vous que la base de données soit supprimée lorsque slapd est purgé ? Non
+
+![image](https://github.com/user-attachments/assets/2b87f0ec-976c-443e-8bf9-7e337f90c04c)
+
+Déplacer l'ancienne base de données ? Oui
+
+![image](https://github.com/user-attachments/assets/36c41ad0-7a7d-4e87-a354-8afaabd98113)
+
+/etc/ldap/ldap.confest le fichier de configuration de tous les clients OpenLDAP. Ouvrez ce fichier
+
+            nano /etc/ldap/ldap.conf
+
+Nous devons spécifier deux paramètres : le DN de base et l' URI de notre serveur OpenLDAP. Copiez et collez le texte suivant à la fin du fichier. Remplacez your-domainet comselon le cas
+
+            BASE dc=starfleet,dc= lan
+            URI ldap://localhost
+
+Enregistrez et fermez le fichier puis Maintenant que le serveur OpenLDAP est en cours d'exécution et que la configuration du client est terminée, exécutez la commande suivante pour établir des connexions de test au serveur
+
+            ldapsearch-x
+            
+Résultat : 0. Le succès indique que le serveur OpenLDAP fonctionne. Si vous obtenez la ligne suivante, cela signifie qu'il ne fonctionne pas
+
+
+résultat : 32 Aucun objet de ce type
+
+LDAP Account Manager est un programme Web de gestion de serveur OpenLDAP. Les utilitaires de ligne de commande peuvent être utilisés pour gérer notre serveur OpenLDAP, mais pour ceux qui souhaitent une interface facile à utiliser, vous pouvez installer LDAP Account Manager
+
+            apt install ldap-account-manager
+
+créez un hôte virtuel pour le gestionnaire de comptes LDAP
+
+            nano /etc/nginx/sites-available/openldap.conf
+
+voicie ce qui se trouve dans le fichier
+
+![image](https://github.com/user-attachments/assets/3246f9c8-4f34-4147-87ee-784577040e05)
+
+puis on fait un lien vers le sites-enable
+
+            cd /etc/nginx/sites-enable/
+            ln -s /etc/nginx/sites-available/openldap.conf
+
+ensuite on ajoute le nom de domaine openldap.starfleet.lan allez dans le fichier
+
+            nano /etc/bind/db.starfleet.lan
+
+ajouter la ligne 
+
+            openldap IN A 10.100.255.1
+
+Enregistrez et fermez le fichier. Ensuite, envoyez les configurations Nginx
+
+            sudo nginx -t
+
+puis redemarrer nginx
+
+            systemctl restart nginx
+
+ensuite par default ldap a comme utilisateur "Manager" et comme mot de passe inconnu donc pour modifier l'utilisateur et le mot de passe il faut allez dans le fichier
+
+            nano /usr/share/ldap-account-manager/config/lam.conf
+
+changer les ligne
+
+            Admins: cn=admin,dc=starfleet,dc=lan
+            Passwd: "mot de passe"
+            types: suffix_user: ou=People,dc=starfleet,dc=lan
+            types: suffix_group: ou=People,dc=starfleet,dc=lan
+
+enregistrer et quittez puis verrifier sur un navigateur web si sa fonctionne et vous connectez
+
+12 - Mise en place de PhpMyAdmin
+
+
+
+Exécutez la commande suivante pour installer LDAP Account Manager à partir du référentiel de packages Debian
 
 9 - FTPS
 
