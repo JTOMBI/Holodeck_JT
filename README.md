@@ -501,12 +501,33 @@ ensuite renommez le fichier index.html par index.php
 
             mv index.html index.php
 
+faite la meme opération pour www8
+
+ensuite allez dans le fichier site-available de www7
+
+            nano /etc/nginx/sites-available/www7
+
+rajouter dans le fichier la localisation de php7.4 et ajouter index.php dans index
+
+![image](https://github.com/user-attachments/assets/a498510f-1436-456d-b443-ecbc05bc1b7b)
+
+faite parreille pour www8 en mettant dans fastcgi_pass l'addresse ip et le port qu'on a mit dans le fichier www.conf de php8.3
+
+![image](https://github.com/user-attachments/assets/68e64b7e-1183-40c0-b271-4f89c3480b26)
+
+verifier si il y a des erreur avec la commande 
+
+            nginx -t
+
+puis redemarrer nginx
+
+            systemctl restart nginx
+
+tester sur un navigateur web si www7 nous montre php7.4 et si www8 nous montre php8.3
 
 9 - FTPS
 
 ![image](https://github.com/user-attachments/assets/8d94a477-7b57-4224-bb35-edb7faf488ac)
-
-Installer PHP7.4 et 8.3 et les faire
 
 9 - LDAP et LAM
 
