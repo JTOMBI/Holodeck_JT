@@ -610,9 +610,9 @@ Enregistrez et fermez le fichier. Ensuite, envoyez les configurations Nginx
 
             sudo nginx -t
 
-puis redemarrer nginx
+puis redemarrer nginx et bind
 
-            systemctl restart nginx
+            systemctl restart nginx bind
 
 ensuite par default ldap a comme utilisateur "Manager" et comme mot de passe inconnu donc pour modifier l'utilisateur et le mot de passe il faut allez dans le fichier
 
@@ -629,9 +629,104 @@ enregistrer et quittez puis verrifier sur un navigateur web si sa fonctionne et 
 
 12 - Mise en place de PhpMyAdmin
 
+phpMyAdmin n'est pas inclus dans le dépôt de logiciels Debian 11, vous devrez donc télécharger manuellement le logiciel. Accédez à la page de téléchargement de phpMyAdmin pour vérifier la dernière version stable. Exécutez ensuite la commande suivante pour le télécharger
+
+            wget https://files.phpmyadmin.net/phpMyAdmin/5.2.1/phpMyAdmin-5.2.1-all-languages.tar.gz
+
+Extraire le fichier téléchargé
+
+            tar xvf phpMyAdmin-5.2.1-all-languages.tar.gz
+
+Déplacer le phpMyAdmin-5.2.1-all-languagesvers /usr/share/le répertoire
+
+            mv phpMyAdmin-5.2.1-all-languages /usr/share/phpmyadmin
+
+Créez un sous-répertoire avec la commande suivante
+
+            mkdir -p /var/lib/phpmyadmin/tmp
+
+Faites de l'utilisateur du serveur Web www-datale propriétaire de ce répertoire
+
+            chown -R www-data:www-data /var/lib/phpmyadmin
+
+Faire une copie dans le fichier/usr/share/phpmyadmin/config.inc.php
+
+            cp /usr/share/phpmyadmin/config.sample.inc.php /usr/share/phpMyAdmin/config.inc.php
+
+Installez et utilisez le programme pwgen pour générer une chaîne aléatoire,
+
+            apt install pwgen
+
+Générer un mot de passe aléatoire
+
+            pwgen -s 32 1
+
+Modifiez le /usr/share/phpmyadmin/config.inc.php
+
+            nano /usr/share/phpmyadmin/config.inc.php
+
+Saisissez une chaîne de 32 caractères aléatoires entre guillemets simples
+
+![image](https://github.com/user-attachments/assets/4381a0b6-6f9f-476d-988b-618367da9daf)
+
+Ensuite, supprimez le commentaire de cette section du /usr/share/phpmyadmin/config.inc.phpfichier et elle ressemblera à ceci
+
+![image](https://github.com/user-attachments/assets/d617239d-b40c-466a-a2ee-d87c052719f7)
+
+Ajoutez la ligne suivante au bas du fichier
+
+            $cfg['TempDir'] = '/var/lib/phpmyadmin/tmp';
+
+Enfin, enregistrez et quittez le fichier
+
+Créez la base de données et les tables de stockage de configuration en exécutant la commande suivante
+
+            mariadb < /usr/share/phpmyadmin/sql/create_tables.sql
+
+Ouvrez l'invite MariaDB
+
+            mariadb
+
+Créez l'utilisateur pma et accordez-lui les autorisations appropriées et remplacez les textes par votre mot de passe préféré
+
+            GRANT SELECT, INSERT, UPDATE, DELETE ON phpmyadmin.* TO 'pma'@'localhost' IDENTIFIED BY 'password';
+            GRANT ALL PRIVILEGES ON phpmyadmin.* TO 'pma'@'localhost' IDENTIFIED BY 'password' WITH GRANT OPTION;
+            GRANT ALL PRIVILEGES ON *.* TO 'pma'@'localhost' IDENTIFIED BY 'password' WITH GRANT OPTION;
+            flush privileges;
+            exit;
+
+créez un hôte virtuel pour le gestionnaire de comptes LDAP
+
+            nano /etc/nginx/sites-available/phpmyadmin.conf
+
+voicie ce qui se trouve dans le fichier
+
+![image](https://github.com/user-attachments/assets/a53b6248-ab13-4075-bbc2-7c082a61ef02)
+
+puis on fait un lien vers le sites-enable
+
+            cd /etc/nginx/sites-enable/
+            ln -s /etc/nginx/sites-available/phpmyadmin.conf
+
+ensuite on ajoute le nom de domaine openldap.starfleet.lan allez dans le fichier
+
+            nano /etc/bind/db.starfleet.lan
+
+ajouter la ligne 
+
+            php IN A 10.100.255.1
+
+Enregistrez et fermez le fichier. Ensuite, envoyez les configurations Nginx
+
+            sudo nginx -t
+
+puis redemarrer nginx et bind
+
+            systemctl restart nginx bind9
+
+verrifier sur un navigateur web si sa fonctionne et vous connectez
 
 
-Exécutez la commande suivante pour installer LDAP Account Manager à partir du référentiel de packages Debian
 
 9 - FTPS
 
