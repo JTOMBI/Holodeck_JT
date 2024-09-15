@@ -292,6 +292,7 @@ nous allons copier le fichier de configuration par défault dans un fichier que 
 ensuite on modifie le fichier qu'on vient de copier
 
             nano /etc/nginx/site-available/www7
+            
 tout d'abord il faut retirer le "default_server" (et commenté l'ip v6 si vous ne l'utilisé pas) du port 80
 
 ![image](https://github.com/user-attachments/assets/f24c719d-5863-461f-b504-dba397698ccd)
@@ -432,12 +433,80 @@ Testez ensuite une connexion locale
             sftp -o Port=384 admin@starfleet.lan
 8 - SSL
 
+Pour sécuriser notre serveur en activant le protocole HTTPS et installer un certificat, nous
+allons tout d'abord, installez OpenSSL en utilisant la commande suivante
+
+            apt install openssl
+
+Ensuite, générez un certificat auto-signé avec la commande suivante
+
+            sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/starfleet.lan.key -out                         /etc/ssl/certs/starfleet.lan.crt
+
+ajouter le SSL dans le fichiers situer dans etc/nginx/site-available et écouté les port 443 au lieu de 80
+
 ![image](https://github.com/user-attachments/assets/cbebd356-bf73-4543-9fc9-bc3731186af2)
+
+
+9 - Installer PHP7.4 et 8.3 et les faire cohabiter
+
+Tout d'abord, les paquets de services requis sont installés
+
+            apt install lsb-release apt-transport-https ca-certificates wget gnupg -y
+
+Ajoutez le référentiel Sury pour la dernière version PHP sur le système
+
+            wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+            echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
+
+Mettez à jour les listes de packages comme suit
+
+            apt update
+
+Installez maintenant PHP 8.3/7.4 et PHP-FPM avec les modules PHP les plus importants
+
+            apt install php8.3 php8.3-fpm php8.3-{cli,mysql,imap,intl,apcu,cgi,bz2,zip,mbstring,gd,curl,xml,common,opcache,imagick} -y
+
+            apt install php7.4 php7.4-fpm php7.4-{cli,mysql,imap,intl,apcu,cgi,bz2,zip,mbstring,gd,curl,xml,common,opcache,imagick} -y
+
+Mettez à jour les packages comme suit
+
+            apt update && apt upgrade -y
+
+Pour éviter les conflit entre les 2 version de php on va modifier le fichier de php 8.3 dans 
+
+      nano /etc/php/8.3/fpm/pool.d/www.conf
+
+dans le fichier on modifie la ligne listen pour qu'il ecoute php8.3 avec l'adresse ip et le port du serveur Holodesk (il va écouter dans le port 2000)
+
+            listen = 10.100.255.1:2000
+            
+quittez et enregistrez puis démarrez les 2 php
+
+            systemctl start php8.2-fpm
+            systemctl start php7.4-fpm
+
+10 - site utilisant 2 version de php différant
+
+tout d'abord allez dans le l'index.html de www7
+
+            cd /var/www/starfleet.lan/www7/
+            nano index.html
+
+Supprimer tout pour remplacer par
+
+            <?php
+            phpinfo(); 
+            ?>
+ensuite renommez le fichier index.html par index.php
+
+            mv index.html index.php
+
 
 9 - FTPS
 
 ![image](https://github.com/user-attachments/assets/8d94a477-7b57-4224-bb35-edb7faf488ac)
 
+Installer PHP7.4 et 8.3 et les faire
 
 9 - LDAP et LAM
 
