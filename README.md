@@ -726,12 +726,114 @@ puis redemarrer nginx et bind
 
 verrifier sur un navigateur web si sa fonctionne et vous connectez
 
+13 - Mise en place de Zabbix
 
+Installer le référentiel Zabbix
+
+            wget https://repo.zabbix.com/zabbix/6.4/debian/pool/main/z/zabbix-release/zabbix-release_6.4-1+debian11_all.deb
+            dpkg -i zabbix-release_6.4-1+debian11_all.deb
+            apt update
+Installer le serveur, le frontend et l'agent Zabbix
+
+            apt install zabbix-server-mysql zabbix-frontend-php zabbix-nginx-conf zabbix-sql-scripts zabbix-agent
+
+Créer la base de données initiale
+
+            mysql -uroot -p
+            create database zabbix character set utf8mb4 collate utf8mb4_bin;
+            create user zabbix@localhost identified by 'password';
+            grant all privileges on zabbix.* to zabbix@localhost;
+            set global log_bin_trust_function_creators = 1;
+            quit;
+
+Sur l'hôte du serveur Zabbix, importez le schéma et les données initiaux. Vous serez invité à saisir votre mot de passe nouvellement créé
+
+            zcat /usr/share/zabbix-sql-scripts/mysql/server.sql.gz | mysql --default-character-set=utf8mb4 -uzabbix -p zabbix
+
+Désactivez l'option log_bin_trust_function_creators après l'importation du schéma de base de données
+
+            mysql -uroot -p
+            set global log_bin_trust_function_creators = 0;
+            quit;
+
+Modifier le fichier /etc/zabbix/zabbix_server.conf
+
+            DBPassword=password
+
+Modifiez le fichier /etc/zabbix/nginx.conf, supprimez les commentaires et définissez les directives « listen » et « server_name ».
+
+            listen 443;
+            server_name admin.starfleet.lan;
+
+Modifier aussi le chemin php
+
+            fastcgi_pass 10.100.255.1:2000
+
+et ajouter le SSL
+
+![image](https://github.com/user-attachments/assets/75fd0739-7d85-43a9-988b-f1937940961a)
+ 
+ensuite il faut suprimer dans le fpm de php8.3 zabbix.conf car il peut y avoir des conflit php
+
+            rm /etc/php/8.3/fpm/pool.d/zabbix.conf
+
+ensuite on ajoute le nom de domaine openldap.starfleet.lan allez dans le fichier
+
+            nano /etc/bind/db.starfleet.lan
+
+ajouter la ligne 
+
+            php IN A 10.100.255.1
+
+Enregistrez et fermez le fichier puis démarrez les processus du serveur et de l'agent Zabbix et faites-les démarrer au démarrage du système
+
+            systemctl restart zabbix-server zabbix-agent nginx php8.3-fpm bind9
+            systemctl enable zabbix-server zabbix-agent nginx php8.3-fpm bind9
+
+Ouvrir la page Web de l'interface utilisateur de Zabbix puis connectez vous
+
+Maintenant on va istaller l'agent zabbix pour le client donc pour le client on tape 
+
+            apt-get install wget
+            wget https://repo.zabbix.com/zabbix/6.4/debian/pool/main/z/zabbix-release/zabbix-release_6.4-1+debian11_all.deb
+            dpkg -i zabbix-release_6.4-1+debian11_all.deb
+            apt update
+
+Installer l'agent Zabbix
+
+            apt install zabbix-agent
+
+Démarrez le processus de l'agent Zabbix et faites-le démarrer au démarrage du système
+
+            systemctl restart zabbix-agent
+            systemctl enable zabbix-agent
+
+modifier le fichier client de l'agent zabbix
+
+            nano /etc/zabbix/zabbix_agentd.conf
+
+modifier les ligne suivant
+
+            Server=10.100.255.1
+            ServerActive=10.100.255.1
+            Hostname=vm-client-1
+
+enregistrer et quittez puis allez sur le site de zabbix server pour ajouter un hote connectez vous puis allez sur Surveillance / Hotes
+
+![image](https://github.com/user-attachments/assets/7f2a7ccb-7715-443f-afb1-4f6b5f96c015)
+
+Cliquez en haut a droite "Créer un hote"
+
+créer le nouveau hote
+
+![image](https://github.com/user-attachments/assets/698a7040-fcff-4a1c-ba5a-781da10777f6)
+
+attendez jusqu'a que "ZBX" passe vert 
+
+![image](https://github.com/user-attachments/assets/9db9e89e-60b2-464a-aa1d-b5aba4d15662)
+
+le client est maintenant reconnue
 
 9 - FTPS
 
 ![image](https://github.com/user-attachments/assets/8d94a477-7b57-4224-bb35-edb7faf488ac)
-
-9 - LDAP et LAM
-
-![image](https://github.com/user-attachments/assets/b4bc6583-1417-46f0-bff7-5b89258fd40b)
