@@ -828,12 +828,110 @@ créer le nouveau hote
 
 ![image](https://github.com/user-attachments/assets/698a7040-fcff-4a1c-ba5a-781da10777f6)
 
-attendez jusqu'a que "ZBX" passe vert 
+attendez jusqu'a que "ZBX" passe en vert 
 
 ![image](https://github.com/user-attachments/assets/9db9e89e-60b2-464a-aa1d-b5aba4d15662)
 
-le client est maintenant reconnue
+le client est maintenant reconnue par le serveur
 
-9 - FTPS
+14 - FTPS
+
+installez vsftpd
+
+            apt install vsftpd
+
+modifiez le fichier de vsftpd
+
+            nano /etc/vsftpd.conf
+
+![image](https://github.com/user-attachments/assets/03158a83-74e7-46a2-a29b-252bada72745)
+
+pour le ssl on ajoute aussi dans le meme fichier
+
+![image](https://github.com/user-attachments/assets/6cd674d6-390d-4cc7-ae61-d4628c3808cc)
+
+et pour le fichier chroot qui sera rediriger vers le site web on ajoute en fin du meme fichier
+
+![image](https://github.com/user-attachments/assets/4eee4aff-e0f0-4041-a7b6-3f26332a2de6)
+
+Ainsi on a déterminé que nous souhaitons que le propriétaire des fichiers uploadés  soit www-data.
+
+On a également spécifié le chemin de configuration des utilisateurs FTP user_config_dir=/etc/vsftpd
+
+Notez au passage, que pour des raisons de sécurité, il convient de modifier le port d’écoute par défaut du serveur FTP (21) par un autre (ici 21988).Cela évite, en effet, que le serveur se fasse bêtement scanner et/ou attaquer en force brute sur le port 21.
+
+Autre point important dans cette configuration, nous utilisons le mode ‘passif‘. Le mode passif est recommandé dans le cas où un pare-feu (firewall) filtre votre réseau. L’avantage de ce mode est que votre serveur FTP n’initialise aucune connexion FTP.
+
+Il convient de créer le dossier /etc/vsftpd comme précédemment spécifié
+
+            mkdir /etc/vsftpd
+
+Via la commande adduser, il faut créer en amont, l’utilisateur UNIX ‘client‘ (et donc l’utilisateur FTP)
+
+            adduser client
+
+Enfin, il reste a spécifier dans le fichier de l’utilisateur le chemin ou se trouve votre CMS (exemple : /var/www/starfleet.lan) :
+
+            nano /etc/vsftpd/client
+            local_root=/var/www/starfleet.lan
+
+Pour terminer, il faut redémarrer le serveur Vsftpd afin que la nouvelle configuration soit prise en compte
+
+            service vsftpd restart
+
+sur le client lancer filezila, allez sur fichier puis gestionnaire de site et configurer le nouveau site
+
+![image](https://github.com/user-attachments/assets/4b17aabb-7556-4153-9a6a-e01994e41a59)
+
+ecrivez votre mot de passe et normalement filezila vous montre le certificat ssl du server puis vous aurez access au fichier web
 
 ![image](https://github.com/user-attachments/assets/8d94a477-7b57-4224-bb35-edb7faf488ac)
+
+![image](https://github.com/user-attachments/assets/e271245e-2cff-42fa-9587-7a01e6948b13)
+
+15 - FireWall avec UFW
+
+L'installation de ufw
+
+            apt-get install ufw
+
+Avant de commencer, ufw ne se démarre pas par défaut pour ne pas vous enfermer dehors. Avant de l'activer on va commencer par gérer les politiques d'accès par défaut.
+
+            ufw default deny incoming
+            ufw default allow outgoing
+
+maintenant on va ajouté les regles avant d'activer le FireWall
+
+Notre serveur contient du https, DNS, DHCP, SSH (sftp)
+
+            ufw allow https
+            ufw allow bootps comment 'Allow 67/UDP'
+            ufw allow bootps comment 'Allow 68/UDP'
+            ufw allow bootps comment 'Allow DNS_53/UDP'
+            ufw allow bootps comment 'Allow DNS_53/TCP'
+            ufw allow dns
+            ufw allow ssh
+            ufw allow 384/tcp
+            
+serveur ftps
+
+            ufw allow 40000:50000/tcp
+            ufw allow 20/tcp
+            ufw allow 21/tcp
+            ufw allow 21988/tcp
+            ufw allow 990/tcp
+
+Serveur Zabbix serveur et agent
+            
+            ufw allow 10051/tcp
+            ufw allow 10051/udp
+            ufw allow 10050/tcp
+            ufw allow 10050/tcp
+
+pour activez le FireWall tappez
+
+            ufw enable
+
+pour verifiez tappez
+
+            ufw status
