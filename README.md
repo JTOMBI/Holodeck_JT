@@ -1,5 +1,3 @@
-# Holodeck
-
 1 - Installation de Debian 11 sur VMware Workstation 17
 
 1.1 - Installation de l'image iso
