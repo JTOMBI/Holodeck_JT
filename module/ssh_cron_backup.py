@@ -7,12 +7,12 @@ from datetime import datetime
 BACKUP_DIR = os.getenv('BACKUP_DIR', '~/backup')
 DATABASE_NAME = os.getenv('DATABASE_NAME', 'bb_sql')
 DATABASE_USER = os.getenv('DATABASE_USER', 'jtombi')
-DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD', 'salakae')
+DATABASE_PASSWORD = os.getenv('DATABASE_PASSWORD', 'votre_mot_de_passe')
 REMOTE_HOST = os.getenv('REMOTE_HOST', '192.168.75.129')
 REMOTE_USER = os.getenv('REMOTE_USER', 'jtombi')
 PRIVATE_KEY_PATH = os.getenv('PRIVATE_KEY_PATH', '/home/py/.ssh/id_rsa')
 NUMBER_OF_BACKUPS_TO_KEEP = int(os.getenv('NUMBER_OF_BACKUPS_TO_KEEP', 7))
-SUDO_PASSWORD = os.getenv('SUDO_PASSWORD', 'salakae')  # Mot de passe sudo
+SUDO_PASSWORD = os.getenv('SUDO_PASSWORD', 'votre_mot_de_passe')  # Mot de passe sudo
 
 # Configurer la journalisation
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
