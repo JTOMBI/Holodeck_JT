@@ -28,7 +28,7 @@ servers = [
 db_config = {
     "host": "192.168.75.129",
     "user": "jtombi",
-    "password": "salakae",
+    "password": "votre_mot_de_passe",
     "database": "bb_sql"
 }
 
